@@ -352,6 +352,11 @@ void CL_FinishMove (usercmd_t *cmd)
 	if (anykeydown && cls.key_dest == key_game)
 		cmd->buttons |= BUTTON_ANY;
 
+#ifdef __ANDROID__ // Make the shoot button sent ANY BUTTON, this is so it can pass through intermissions
+    if( cmd->buttons & BUTTON_ATTACK )
+        cmd->buttons |= BUTTON_ANY;
+#endif
+
 	// send milliseconds of time to apply the move
 	ms = cls.frametime * 1000;
 	if (ms > 250)
