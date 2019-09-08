@@ -290,9 +290,12 @@ void IN_Move_Android (usercmd_t *cmd)
 		quickCommand = 0;
 	}
 
+    int blockGamepad( void );
+    if( blockGamepad() )
+        return;
+
 	cmd->forwardmove += forwardmove * cl_forwardspeed->value * 2; //Always run! (x2)
 	cmd->sidemove  += sidemove   * cl_sidespeed->value * 2;
-
 
 	in_state->viewangles[PITCH] += -look_pitch_mouse * 300;
 	look_pitch_mouse = 0;
