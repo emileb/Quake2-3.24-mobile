@@ -2,7 +2,7 @@
 	snd_sdl.c
 
 	Sound code taken from SDLQuake and modified to work with Quake2
-	Robert Bäuml 2001-12-25
+	Robert BÃ¤uml 2001-12-25
 
 	This program is free software; you can redistribute it and/or
 	modify it under the terms of the GNU General Public License
@@ -43,6 +43,11 @@ paint_audio (void *unused, Uint8 * stream, int len)
 		S_PaintChannels (shm->samplepos);
 	}
 }
+
+#ifdef __ANDROID__
+extern int AUDIO_OVERRIDE_FREQ;
+extern int AUDIO_OVERRIDE_SAMPLES;
+#endif
 
 qboolean
 SNDDMA_Init (void)
@@ -96,7 +101,15 @@ SNDDMA_Init (void)
 		desired.samples = 1024;
 	else
 		desired.samples = 512;
-	
+
+#ifdef __ANDROID__
+    if (AUDIO_OVERRIDE_FREQ != 0)
+        desired.freq = AUDIO_OVERRIDE_FREQ;
+
+    if (AUDIO_OVERRIDE_SAMPLES != 0)
+        desired.samples = AUDIO_OVERRIDE_SAMPLES;
+#endif
+
 	desired.callback = paint_audio;
 	
 	/* Open the audio device */
