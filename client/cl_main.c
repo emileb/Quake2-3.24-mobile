@@ -1669,12 +1669,12 @@ void CL_WriteConfiguration (char *cfgName)
 		return;
 
     // Create directories
-	Sys_Mkdir(".q2");
-	Com_sprintf (path, sizeof(path),".q2/%s/", FS_Gamedir());
-    Sys_Mkdir(path);
+	//Sys_Mkdir(".q2");
+	//Com_sprintf (path, sizeof(path),".q2/%s/", FS_Gamedir());
+    //Sys_Mkdir(path);
 
-//	Com_sprintf (path, sizeof(path),"%s/config.cfg", FS_Gamedir());
-	Com_sprintf (path, sizeof(path),".q2/%s/%s.cfg", FS_Gamedir(), cfgName);
+	Com_sprintf (path, sizeof(path),"%s/config.cfg", FS_Gamedir());
+//	Com_sprintf (path, sizeof(path),".q2/%s/%s.cfg", FS_Gamedir(), cfgName);
 
 
 	f = fopen (path, "w");

@@ -348,7 +348,8 @@ int FS_FOpenFile (char *filename, FILE **file)
 #ifdef __ANDROID__ // Added by emile
 	if (!strcmp(filename, "config.cfg"))
 	{
-		Com_sprintf (netpath, sizeof(netpath), ".q2/%s/%s",FS_Gamedir(), filename);
+		//Com_sprintf (netpath, sizeof(netpath), ".q2/%s/%s",FS_Gamedir(), filename);
+		Com_sprintf (netpath, sizeof(netpath),"%s/config.cfg", FS_Gamedir());
 
 		*file = fopen (netpath, "rb");
 		if (*file)
@@ -1043,6 +1044,8 @@ void FS_SetGamedir (char *dir)
 
 	Com_sprintf (fs_gamedir, sizeof(fs_gamedir), "%s/%s", fs_basedir->string, dir);
 
+	//FS_AddGameDirectory (va("./%s", dir) );
+
 	if (!strcmp(dir,BASEDIRNAME) || (*dir == 0))
 	{
 		Cvar_FullSet ("gamedir", "", CVAR_SERVERINFO|CVAR_NOSET);
@@ -1055,6 +1058,19 @@ void FS_SetGamedir (char *dir)
 			FS_AddGameDirectory (va("%s/%s", fs_cddir->string, dir) );
 		FS_AddGameDirectory (va("%s/%s", fs_basedir->string, dir) );
 	}
+
+#ifdef __ANDROID__
+	//if dir is empty it's because game = baseq2
+
+	if( !strcmp(dir,"") )
+		strcpy(fs_gamedir, va(".q2/baseq2", dir));
+	else
+        strcpy(fs_gamedir, va(".q2/%s", dir));
+
+    FS_CreatePath(fs_gamedir);
+
+    Com_Printf ("dir = %s, fs_gamedir = %s\n", dir, fs_gamedir);
+#endif
 }
 
 
