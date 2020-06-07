@@ -451,13 +451,14 @@ int XLateKey(unsigned int keysym)
 		case SDLK_KP_PLUS:		key = K_KP_PLUS; break;
 		case SDLK_KP_MINUS:		key = K_KP_MINUS; break;
 		case SDLK_KP_DIVIDE:		key = K_KP_SLASH; break;
-		
+
 		/* suggestions on how to handle this better would be appreciated */
 		//case SDLK_WORLD_7:		key = '`'; break;
 		
 		default: /* assuming that the other sdl keys are mapped to ascii */
-			if (keysym < 128)
-				key = keysym;
+			//if (keysym < 128)
+			//	key = keysym;
+			key = 0;
 			break;
 	}
 
@@ -507,41 +508,6 @@ void GetEvent(SDL_Event *event)
 	  break;
 #endif
 	case SDL_KEYDOWN:
-#if 0
-	  if ( (KeyStates[SDLK_LALT] || KeyStates[SDLK_RALT]) &&
-	       (event->key.keysym.sym == SDLK_RETURN) ) {
-	    cvar_t *fullscreen;
-	    
-	    SDL_WM_ToggleFullScreen(surface);
-	    
-	    if (surface->flags & SDL_FULLSCREEN) {
-	      ri.Cvar_SetValue( "vid_fullscreen", 1 );
-	    } else {
-	      ri.Cvar_SetValue( "vid_fullscreen", 0 );
-	    }
-	    
-	    fullscreen = ri.Cvar_Get( "vid_fullscreen", "0", 0 );
-	    fullscreen->modified = false; /* we just changed it with SDL. */
-	    
-	    break; /* ignore this key */
-	  }
-
-
-	  if ( (KeyStates[SDLK_LCTRL] || KeyStates[SDLK_RCTRL]) &&
-	       (event->key.keysym.sym == SDLK_g) ) {
-	    SDL_GrabMode gm = SDL_WM_GrabInput(SDL_GRAB_QUERY);
-	    /*	
-	      SDL_WM_GrabInput((gm == SDL_GRAB_ON) ? SDL_GRAB_OFF : SDL_GRAB_ON);
-	      gm = SDL_WM_GrabInput(SDL_GRAB_QUERY);
-	    */	
-	    ri.Cvar_SetValue( "_windowed_mouse", (gm == SDL_GRAB_ON) ? /*1*/ 0 : /*0*/ 1 );
-	    
-	    break; /* ignore this key */
-	  }
-  #endif
-
-	  //KeyStates[event->key.keysym.sym] = 1;
-	  
 	  key = XLateKey(event->key.keysym.sym);
 	  if (key) {
 	    keyq[keyq_head].key = key;
@@ -550,17 +516,26 @@ void GetEvent(SDL_Event *event)
 	  }
 	  break;
 	case SDL_KEYUP:
-	  //if (KeyStates[event->key.keysym.sym]) {
-	 //   KeyStates[event->key.keysym.sym] = 0;
-	    
 	    key = XLateKey(event->key.keysym.sym);
 	    if (key) {
 	      keyq[keyq_head].key = key;
 	      keyq[keyq_head].down = false;
 	      keyq_head = (keyq_head + 1) & 63;
 	    }
-	 // }
 	  break;
+	case SDL_TEXTINPUT:
+		if (event->text.text[0] && event->text.text[0] < 128) {
+			key = event->text.text[0];
+
+			keyq[keyq_head].key = key;
+			keyq[keyq_head].down = true;
+			keyq_head = (keyq_head + 1) & 63;
+
+			keyq[keyq_head].key = key;
+			keyq[keyq_head].down = false;
+			keyq_head = (keyq_head + 1) & 63;
+		}
+		break;
 	case SDL_QUIT:
 	  ri.Cmd_ExecuteText(EXEC_NOW, "quit");
 	  break;
