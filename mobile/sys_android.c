@@ -260,8 +260,6 @@ void Sys_UnloadGame (void)
 
 int getGameType();
 
-char *savegamePath = "save";
-
 extern char const * nativeLibsPath;
 
 /*
@@ -307,35 +305,26 @@ void *Sys_GetGameAPI (void *parms)
 	{
 		Com_Printf("Loading libq2game.so");
 		lib_name = "libq2game.so";
-		savegamePath = ".q2/save";
 	}
 	else if (getGameType() == Q2DLL_XATRIX)
 	{
 		Com_Printf("Loading libq2gamexatrix.so");
 		lib_name = "libq2gamexatrix.so";
-		savegamePath = ".q2/save_xatrix";
 	}
 	else if (getGameType() == Q2DLL_ROGUE)
 	{
 		Com_Printf("Loading libq2gamerogue.so");
 		lib_name = "libq2gamerogue.so";
-		savegamePath = ".q2/save_rouge";
 	}
 	else if (getGameType() == Q2DLL_CTF)
 	{
 		Com_Printf("Loading libq2gamectf.so");
 		lib_name = "libq2gamectf.so";
-		savegamePath = ".q2/save_ctf";
 	}
 	else if (getGameType() == Q2DLL_CRBOT)
 	{
 		Com_Printf("Loading libq2gamecrbot.so");
 		lib_name = "libq2gamecrbot.so";
-		savegamePath = ".q2/save_crbot";
-	}
-	else
-	{
-		savegamePath = ".q2/save";
 	}
 
 	char lib_full_path[512];

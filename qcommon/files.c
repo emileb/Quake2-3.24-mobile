@@ -446,7 +446,7 @@ int FS_FOpenFile (char *filename, FILE **file)
 	// get config from directory, everything else from pak
 	if (!strcmp(filename, "config.cfg"))
 	{
-		Com_sprintf (netpath, sizeof(netpath), ".q2/%s/%s",FS_Gamedir(), filename);
+		Com_sprintf (netpath, sizeof(netpath), "../user_files/q2/%s/%s",FS_Gamedir(), filename);
 		
 		*file = fopen (netpath, "rb");
 		if (!*file)
@@ -1063,9 +1063,9 @@ void FS_SetGamedir (char *dir)
 	//if dir is empty it's because game = baseq2
 
 	if( !strcmp(dir,"") )
-		strcpy(fs_gamedir, va(".q2/baseq2", dir));
+		strcpy(fs_gamedir, va("../user_files/q2/baseq2"));
 	else
-        strcpy(fs_gamedir, va(".q2/%s", dir));
+        strcpy(fs_gamedir, va("../user_files/q2/%s", dir));
 
     FS_CreatePath(fs_gamedir);
 
