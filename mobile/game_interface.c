@@ -179,7 +179,7 @@ void PortableAction(int state, int action)
 	}
 }
 
-static char * quickCommand = 0;
+static const char * quickCommand = 0;
 void PortableCommand(const char * cmd)
 {
 	quickCommand = cmd;
