@@ -212,12 +212,6 @@ touchscreemode_t PortableGetScreenMode()
 		return TS_MENU;
 }
 
-
-void PortableAutomapControl(float zoom, float x, float y)
-{
-
-}
-
 void PortableBackButton()
 {
     LOGI("Back button");

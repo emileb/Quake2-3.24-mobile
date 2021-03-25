@@ -69,7 +69,7 @@ QUAKE2_SRC := \
     mobile/rw_sdl.c \
     ../../Clibs_OpenTouch/quake/android_jni.cpp \
     ../../Clibs_OpenTouch/quake/touch_interface.cpp \
-
+    ../../Clibs_OpenTouch/touch_interface_base.cpp \
 
 REF_GL_SRC = \
 	ref_gl/gl_draw.c \
