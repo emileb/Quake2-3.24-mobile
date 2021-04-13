@@ -26,7 +26,7 @@ extern int SDL_SendKeyboardKey(Uint8 state, SDL_Scancode scancode);
 
 int PortableKeyEvent(int state, int code ,int unitcode)
 {
-	LOGI("PortableKeyEvent %d %d",state,code);
+	LOGI("PortableKeyEvent Q2 %d %d",state,code);
 
     if (state)
         SDL_SendKeyboardKey(SDL_PRESSED, (SDL_Scancode)code);
@@ -92,7 +92,7 @@ void PortableAction(int state, int action)
         else
             code = SDL_SCANCODE_1 + action - PORT_ACT_WEAP1;
 
-        PortableKeyEvent(state,code, 0);
+        PortableKeyEvent(state, code, 0);
     }
     else
     {
@@ -196,7 +196,7 @@ static const char * quickCommand = 0;
 void PortableCommand(const char * cmd)
 {
 	static char cmdBuffer[256];
-	snprintf(cmdBuffer, 256, "%s", cmd);
+	snprintf(cmdBuffer, 256, "%s\n", cmd);
 	quickCommand = cmdBuffer;
 }
 

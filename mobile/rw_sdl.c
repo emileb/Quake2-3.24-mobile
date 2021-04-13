@@ -456,9 +456,8 @@ int XLateKey(unsigned int keysym)
 		//case SDLK_WORLD_7:		key = '`'; break;
 		
 		default: /* assuming that the other sdl keys are mapped to ascii */
-			//if (keysym < 128)
-			//	key = keysym;
-			key = 0;
+			if (keysym < 128)
+				key = keysym;
 			break;
 	}
 
@@ -524,16 +523,36 @@ void GetEvent(SDL_Event *event)
 	    }
 	  break;
 	case SDL_TEXTINPUT:
-		if (event->text.text[0] && event->text.text[0] < 128) {
-			key = event->text.text[0];
+		{
+		int textKey = event->text.text[0];
 
-			keyq[keyq_head].key = key;
-			keyq[keyq_head].down = true;
-			keyq_head = (keyq_head + 1) & 63;
+		if( textKey == '!' ||
+			textKey == '"' ||
+			textKey == '$' ||
+			textKey == '*' ||
+			textKey == '&' ||
+			textKey == '(' ||
+			textKey == ')' ||
+			textKey == '{' ||
+			textKey == '}' ||
+			textKey == '+' ||
+			textKey == '_' ||
+			textKey == ':' ||
+			textKey == '@' ||
+			textKey == '?' ||
+			textKey == '<' ||
+			textKey == '>')
+			{
+				key = textKey;
 
-			keyq[keyq_head].key = key;
-			keyq[keyq_head].down = false;
-			keyq_head = (keyq_head + 1) & 63;
+				keyq[keyq_head].key = key;
+				keyq[keyq_head].down = true;
+				keyq_head = (keyq_head + 1) & 63;
+
+				keyq[keyq_head].key = key;
+				keyq[keyq_head].down = false;
+				keyq_head = (keyq_head + 1) & 63;
+			}
 		}
 		break;
 	case SDL_QUIT:
