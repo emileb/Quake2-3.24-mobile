@@ -39,6 +39,8 @@ cvar_t		*vid_ref;			// Name of Refresh DLL loaded
 cvar_t		*vid_xpos;			// X coordinate of window position
 cvar_t		*vid_ypos;			// Y coordinate of window position
 cvar_t		*vid_fullscreen;
+cvar_t		*r_customwidth;
+cvar_t		*r_customheight;
 
 // Global variables used internally by this module
 viddef_t	viddef;				// global video state; used by other modules
@@ -167,11 +169,8 @@ qboolean VID_GetModeInfo( int *width, int *height, int mode )
 	if ( mode < 0 || mode >= VID_NUM_MODES )
 		return false;
 
-	*width  = vid_modes[mode].width;
-	*height = vid_modes[mode].height;
-
-*width = mobile_screen_width;
-*height = mobile_screen_height;
+	*width = r_customwidth->value;
+	*height = r_customheight->value;
 
 	return true;
 }
@@ -504,6 +503,8 @@ void VID_Init (void)
 	/* Add some console commands that we want to handle */
 	Cmd_AddCommand ("vid_restart", VID_Restart_f);
 
+    r_customwidth = Cvar_Get( "r_customwidth", "0", 0 );
+    r_customheight = Cvar_Get( "r_customheight", "0", 0 );
 #ifndef ANDROID
 	/* Disable the 3Dfx splash screen */
 	putenv("FX_GLIDE_NO_SPLASH=0");
