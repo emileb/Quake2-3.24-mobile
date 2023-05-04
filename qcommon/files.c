@@ -446,7 +446,8 @@ int FS_FOpenFile (char *filename, FILE **file)
 	// get config from directory, everything else from pak
 	if (!strcmp(filename, "config.cfg"))
 	{
-		Com_sprintf (netpath, sizeof(netpath), "../user_files/q2/%s/%s",FS_Gamedir(), filename);
+		extern const char *userFilesPath_c;
+		Com_sprintf (netpath, sizeof(netpath), "%s/q2/%s/%s", userFilesPath_c, FS_Gamedir(), filename);
 		
 		*file = fopen (netpath, "rb");
 		if (!*file)
@@ -1061,11 +1062,12 @@ void FS_SetGamedir (char *dir)
 
 #ifdef __ANDROID__
 	//if dir is empty it's because game = baseq2
+	extern const char *userFilesPath_c;
 
 	if( !strcmp(dir,"") )
-		strcpy(fs_gamedir, va("../user_files/q2/baseq2"));
+		strcpy(fs_gamedir, va("%s/q2/baseq2", userFilesPath_c));
 	else
-        strcpy(fs_gamedir, va("../user_files/q2/%s", dir));
+        strcpy(fs_gamedir, va("%s/q2/%s", userFilesPath_c, dir));
 
     FS_CreatePath(fs_gamedir);
 
