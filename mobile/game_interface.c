@@ -140,6 +140,7 @@ void PortableAction(int state, int action)
  		(state)?KeyDownPort(&in_up):KeyUpPort(&in_up);
  		break;
  	case PORT_ACT_DOWN:
+	case PORT_ACT_TOGGLE_CROUCH:
 		{
 			static SmartToggle_t smartToggle;
 			int activate = SmartToggleAction( &smartToggle, state, KeyIsDown(&in_down));
