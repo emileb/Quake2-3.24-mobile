@@ -185,6 +185,7 @@ void InitGame (void)
 
 	// latched vars
 	sv_cheats = gi.cvar ("cheats", "0", CVAR_SERVERINFO|CVAR_LATCH);
+	sv_unlimited_pickup = gi.cvar ("unlimited_pickup", "0", CVAR_SERVERINFO|CVAR_LATCH);//alex3474247
 	gi.cvar ("gamename", GAMEVERSION , CVAR_SERVERINFO | CVAR_LATCH);
 	gi.cvar ("gamedate", __DATE__ , CVAR_SERVERINFO | CVAR_LATCH);
 

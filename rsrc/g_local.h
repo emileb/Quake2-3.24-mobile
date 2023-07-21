@@ -22,7 +22,7 @@
 //==================================================================
 
 #ifndef _WIN32
-//#include <nan.h>
+#include <nan.h>
 #define min(a,b) ((a) < (b) ? (a) : (b))
 #define max(a,b) ((a) > (b) ? (a) : (b))
 #ifdef __sun__
@@ -649,6 +649,7 @@ extern	cvar_t	*bob_pitch;
 extern	cvar_t	*bob_roll;
 
 extern	cvar_t	*sv_cheats;
+extern	cvar_t	*sv_unlimited_pickup;//alex3474247
 extern	cvar_t	*maxclients;
 extern	cvar_t	*maxspectators;
 

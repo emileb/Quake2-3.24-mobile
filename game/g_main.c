@@ -65,6 +65,7 @@ cvar_t	*bob_pitch;
 cvar_t	*bob_roll;
 
 cvar_t	*sv_cheats;
+cvar_t	*sv_unlimited_pickup;//alex3474247
 
 cvar_t	*flood_msgs;
 cvar_t	*flood_persecond;
@@ -367,8 +368,11 @@ void ExitLevel (void)
 		ent = g_edicts + 1 + i;
 		if (!ent->inuse)
 			continue;
-		if (ent->health > ent->client->pers.max_health)
-			ent->health = ent->client->pers.max_health;
+		if(!sv_unlimited_pickup->value)
+		{
+			if (ent->health > ent->client->pers.max_health)
+				ent->health = ent->client->pers.max_health;
+		}
 	}
 
 }

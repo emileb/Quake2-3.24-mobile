@@ -46,6 +46,7 @@ cvar_t	*cl_timeout;
 cvar_t	*cl_predict;
 //cvar_t	*cl_minfps;
 cvar_t	*cl_maxfps;
+cvar_t	*cl_huddigits;//alex3474247
 cvar_t	*cl_sleep;	// Knightmare- whether to enable CPU usage fix
 cvar_t	*cl_gun;
 
@@ -1531,6 +1532,7 @@ void CL_InitLocal (void)
 	cl_predict = Cvar_Get ("cl_predict", "1", 0);
 //	cl_minfps = Cvar_Get ("cl_minfps", "5", 0);
 	cl_maxfps = Cvar_Get ("cl_maxfps", "90", 0);
+	cl_huddigits = Cvar_Get ("cl_huddigits", "3", 0);
 
 	cl_sleep = Cvar_Get ("cl_sleep", "1", 0);	// Knightmare- whether to enable CPU usage fix
 
@@ -1668,15 +1670,8 @@ void CL_WriteConfiguration (char *cfgName)
 	if (cls.state == ca_uninitialized)
 		return;
 
-    // Create directories
-	//Sys_Mkdir(".q2");
-	//Com_sprintf (path, sizeof(path),".q2/%s/", FS_Gamedir());
-    //Sys_Mkdir(path);
-
 	Com_sprintf (path, sizeof(path),"%s/config.cfg", FS_Gamedir());
-//	Com_sprintf (path, sizeof(path),".q2/%s/%s.cfg", FS_Gamedir(), cfgName);
-
-
+//	Com_sprintf (path, sizeof(path),"%s/%s.cfg", FS_Gamedir(), cfgName);
 	f = fopen (path, "w");
 	if (!f)
 	{
