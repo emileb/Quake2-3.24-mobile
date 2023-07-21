@@ -1163,7 +1163,15 @@ void SCR_ExecuteLayoutString (char *s)
 		{	// health number
 			int		color;
 
-			width = 3;
+			if (!cl_huddigits->value)
+			{
+				width = 3;
+			}
+			else
+			{
+				width = cl_huddigits->value;
+			}
+
 			value = cl.frame.playerstate.stats[STAT_HEALTH];
 			if (value > 25)
 				color = 0;	// green
@@ -1175,7 +1183,7 @@ void SCR_ExecuteLayoutString (char *s)
 			if (cl.frame.playerstate.stats[STAT_FLASHES] & 1)
 				re.DrawPic (x, y, "field_3");
 
-			SCR_DrawField (x, y, color, width, value);
+			SCR_DrawField (x-16*(width-3), y, color, width, value);
 			continue;
 		}
 
@@ -1183,7 +1191,14 @@ void SCR_ExecuteLayoutString (char *s)
 		{	// ammo number
 			int		color;
 
-			width = 3;
+			if (!cl_huddigits->value)
+			{
+				width = 3;
+			}
+			else
+			{
+				width = cl_huddigits->value;
+			}
 			value = cl.frame.playerstate.stats[STAT_AMMO];
 			if (value > 5)
 				color = 0;	// green
@@ -1195,7 +1210,7 @@ void SCR_ExecuteLayoutString (char *s)
 			if (cl.frame.playerstate.stats[STAT_FLASHES] & 4)
 				re.DrawPic (x, y, "field_3");
 
-			SCR_DrawField (x, y, color, width, value);
+			SCR_DrawField (x-16*(width-3), y, color, width, value);
 			continue;
 		}
 
@@ -1203,7 +1218,14 @@ void SCR_ExecuteLayoutString (char *s)
 		{	// armor number
 			int		color;
 
-			width = 3;
+			if (!cl_huddigits->value)
+			{
+				width = 3;
+			}
+			else
+			{
+				width = cl_huddigits->value;
+			}
 			value = cl.frame.playerstate.stats[STAT_ARMOR];
 			if (value < 1)
 				continue;
@@ -1213,7 +1235,7 @@ void SCR_ExecuteLayoutString (char *s)
 			if (cl.frame.playerstate.stats[STAT_FLASHES] & 2)
 				re.DrawPic (x, y, "field_3");
 
-			SCR_DrawField (x, y, color, width, value);
+			SCR_DrawField (x-16*(width-3), y, color, width, value);
 			continue;
 		}
 
