@@ -10,12 +10,8 @@ LOCAL_CFLAGS +=
 
 LOCAL_C_INCLUDES :=     $(SDL_INCLUDE_PATHS)  \
                         $(TOP_DIR) \
-                        $(TOP_DIR)/MobileTouchControls \
-                        $(TOP_DIR)/AudioLibs_OpenTouch/liboggvorbis/include \
                         $(TOP_DIR)/Clibs_OpenTouch \
                         $(TOP_DIR)/Clibs_OpenTouch/quake \
-
-
 
 # Quake  2 source
 LOCAL_SRC_FILES = \
@@ -73,6 +69,8 @@ LOCAL_SRC_FILES = \
 
 
 LOCAL_LDLIBS := -ldl -llog -lz
+LOCAL_SHARED_LIBRARIES := saffal
+
 include $(BUILD_SHARED_LIBRARY)
 
 

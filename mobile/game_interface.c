@@ -309,10 +309,20 @@ void IN_Move_Android (usercmd_t *cmd)
     int blockMove = blockGamepad() & ANALOGUE_AXIS_FWD;
     int blockLook = blockGamepad() & ANALOGUE_AXIS_PITCH;
 
+	int fwdSpeed =  cl_forwardspeed->value * 2;
+	int sideSpeed = cl_sidespeed->value * 2;
+
+	int isPlayerRunning();
+	if(!isPlayerRunning())
+	{
+		fwdSpeed = fwdSpeed / 2;
+		sideSpeed = sideSpeed /2;
+	}
+
     if( !blockMove )
     {
-	    cmd->forwardmove += forwardmove * cl_forwardspeed->value * 2; //Always run! (x2)
-	    cmd->sidemove  += sidemove   * cl_sidespeed->value * 2;
+	    cmd->forwardmove += forwardmove * fwdSpeed;
+	    cmd->sidemove  += sidemove * sideSpeed;
     }
 
     if( !blockLook )

@@ -6,15 +6,12 @@ LOCAL_MODULE := quake2
 
 LOCAL_CFLAGS := -DANDROID -DC_ONLY -DREF_HARD_LINKED  -DQUAKE2 -DOPENGL -DENGINE_NAME=\"quake2\" -D_strnicmp=strncasecmp -D_stricmp=strcasecmp -Dstricmp=strcasecmp
 
-
 LOCAL_C_INCLUDES :=     $(SDL_INCLUDE_PATHS)  \
                         $(TOP_DIR) \
                         $(TOP_DIR)/MobileTouchControls \
                         $(TOP_DIR)/AudioLibs_OpenTouch/liboggvorbis/include \
                         $(TOP_DIR)/Clibs_OpenTouch \
                         $(TOP_DIR)/Clibs_OpenTouch/quake \
-
-
 
 QUAKE2_SRC := \
     client/cl_cin.c \
@@ -91,7 +88,6 @@ LOCAL_SRC_FILES += game/q_shared.c
 LOCAL_SRC_FILES += game/m_flash.c
 
 LOCAL_SRC_FILES += $(QUAKE2_SRC) + $(REF_GL_SRC)
-
 
 LOCAL_LDLIBS := -lEGL -ldl -llog -lOpenSLES -lz -lGLESv1_CM
 LOCAL_STATIC_LIBRARIES := sigc libzip libpng logwritter  libjpeg
