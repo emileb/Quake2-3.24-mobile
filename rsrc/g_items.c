@@ -34,9 +34,9 @@ gitem_armor_t jacketarmor_info	= { 25,  50, .30, .00, ARMOR_JACKET};
 gitem_armor_t combatarmor_info	= { 50, 100, .60, .30, ARMOR_COMBAT};
 gitem_armor_t bodyarmor_info	= {100, 200, .80, .60, ARMOR_BODY};
 
- int	jacket_armor_index;
- int	combat_armor_index;
- int	body_armor_index;
+static int	jacket_armor_index;
+static int	combat_armor_index;
+static int	body_armor_index;
 static int	power_screen_index;
 static int	power_shield_index;
 
@@ -174,9 +174,12 @@ qboolean Pickup_Powerup (edict_t *ent, edict_t *other)
 	int		quantity;
 
 	quantity = other->client->pers.inventory[ITEM_INDEX(ent->item)];
+
+	if(!sv_unlimited_pickup->value)
+	{
 	if ((skill->value == 1 && quantity >= 2) || (skill->value >= 2 && quantity >= 1))
 		return false;
-
+	}
 	if ((coop->value) && (ent->item->flags & IT_STAY_COOP) && (quantity > 0))
 		return false;
 
@@ -216,10 +219,17 @@ qboolean Pickup_Adrenaline (edict_t *ent, edict_t *other)
 {
 	if (!deathmatch->value)
 		other->max_health += 1;
-
-	if (other->health < other->max_health)
-		other->health = other->max_health;
-
+	
+	if(!sv_unlimited_pickup->value)
+	{
+		if (other->health < other->max_health)
+			other->health = other->max_health;
+	}
+	else
+	{
+		other->health += 150;
+	}
+	
 	if (!(ent->spawnflags & DROPPED_ITEM) && (deathmatch->value))
 		SetRespawn (ent, ent->item->quantity);
 
@@ -240,7 +250,8 @@ qboolean Pickup_Bandolier (edict_t *ent, edict_t *other)
 {
 	gitem_t	*item;
 	int		index;
-
+	if(!sv_unlimited_pickup->value)
+	{
 	if (other->client->pers.max_bullets < 250)
 		other->client->pers.max_bullets = 250;
 	if (other->client->pers.max_shells < 150)
@@ -257,14 +268,18 @@ qboolean Pickup_Bandolier (edict_t *ent, edict_t *other)
 		other->client->pers.max_rounds = 150;
 #endif
 	//pmm
-
+	}
 	item = FindItem("Bullets");
 	if (item)
 	{
 		index = ITEM_INDEX(item);
 		other->client->pers.inventory[index] += item->quantity;
+
+		if(!sv_unlimited_pickup->value)
+		{
 		if (other->client->pers.inventory[index] > other->client->pers.max_bullets)
 			other->client->pers.inventory[index] = other->client->pers.max_bullets;
+		}
 	}
 
 	item = FindItem("Shells");
@@ -272,8 +287,12 @@ qboolean Pickup_Bandolier (edict_t *ent, edict_t *other)
 	{
 		index = ITEM_INDEX(item);
 		other->client->pers.inventory[index] += item->quantity;
+
+		if(!sv_unlimited_pickup->value)
+		{
 		if (other->client->pers.inventory[index] > other->client->pers.max_shells)
 			other->client->pers.inventory[index] = other->client->pers.max_shells;
+		}
 	}
 
 	if (!(ent->spawnflags & DROPPED_ITEM) && (deathmatch->value))
@@ -287,6 +306,8 @@ qboolean Pickup_Pack (edict_t *ent, edict_t *other)
 	gitem_t	*item;
 	int		index;
 
+	if(!sv_unlimited_pickup->value)
+	{
 	if (other->client->pers.max_bullets < 300)
 		other->client->pers.max_bullets = 300;
 	if (other->client->pers.max_shells < 200)
@@ -307,14 +328,18 @@ qboolean Pickup_Pack (edict_t *ent, edict_t *other)
 		other->client->pers.max_rounds = 200;
 #endif
 	//pmm
-
+	}
 	item = FindItem("Bullets");
 	if (item)
 	{
 		index = ITEM_INDEX(item);
 		other->client->pers.inventory[index] += item->quantity;
+
+		if(!sv_unlimited_pickup->value)
+		{
 		if (other->client->pers.inventory[index] > other->client->pers.max_bullets)
 			other->client->pers.inventory[index] = other->client->pers.max_bullets;
+		}
 	}
 
 	item = FindItem("Shells");
@@ -322,8 +347,12 @@ qboolean Pickup_Pack (edict_t *ent, edict_t *other)
 	{
 		index = ITEM_INDEX(item);
 		other->client->pers.inventory[index] += item->quantity;
+
+		if(!sv_unlimited_pickup->value)
+		{
 		if (other->client->pers.inventory[index] > other->client->pers.max_shells)
 			other->client->pers.inventory[index] = other->client->pers.max_shells;
+		}
 	}
 
 	item = FindItem("Cells");
@@ -331,8 +360,12 @@ qboolean Pickup_Pack (edict_t *ent, edict_t *other)
 	{
 		index = ITEM_INDEX(item);
 		other->client->pers.inventory[index] += item->quantity;
+		
+		if(!sv_unlimited_pickup->value)
+		{
 		if (other->client->pers.inventory[index] > other->client->pers.max_cells)
 			other->client->pers.inventory[index] = other->client->pers.max_cells;
+		}
 	}
 
 	item = FindItem("Grenades");
@@ -340,8 +373,12 @@ qboolean Pickup_Pack (edict_t *ent, edict_t *other)
 	{
 		index = ITEM_INDEX(item);
 		other->client->pers.inventory[index] += item->quantity;
+		
+		if(!sv_unlimited_pickup->value)
+		{
 		if (other->client->pers.inventory[index] > other->client->pers.max_grenades)
 			other->client->pers.inventory[index] = other->client->pers.max_grenades;
+		}
 	}
 
 	item = FindItem("Rockets");
@@ -349,8 +386,12 @@ qboolean Pickup_Pack (edict_t *ent, edict_t *other)
 	{
 		index = ITEM_INDEX(item);
 		other->client->pers.inventory[index] += item->quantity;
+		
+		if(!sv_unlimited_pickup->value)
+		{
 		if (other->client->pers.inventory[index] > other->client->pers.max_rockets)
 			other->client->pers.inventory[index] = other->client->pers.max_rockets;
+		}
 	}
 
 	item = FindItem("Slugs");
@@ -358,8 +399,12 @@ qboolean Pickup_Pack (edict_t *ent, edict_t *other)
 	{
 		index = ITEM_INDEX(item);
 		other->client->pers.inventory[index] += item->quantity;
+		
+		if(!sv_unlimited_pickup->value)
+		{
 		if (other->client->pers.inventory[index] > other->client->pers.max_slugs)
 			other->client->pers.inventory[index] = other->client->pers.max_slugs;
+		}
 	}
 //PMM
 	item = FindItem("Flechettes");
@@ -367,8 +412,12 @@ qboolean Pickup_Pack (edict_t *ent, edict_t *other)
 	{
 		index = ITEM_INDEX(item);
 		other->client->pers.inventory[index] += item->quantity;
+	
+		if(!sv_unlimited_pickup->value)
+		{
 		if (other->client->pers.inventory[index] > other->client->pers.max_flechettes)
 			other->client->pers.inventory[index] = other->client->pers.max_flechettes;
+		}
 	}
 #ifndef KILL_DISRUPTOR
 	item = FindItem("Rounds");
@@ -376,8 +425,12 @@ qboolean Pickup_Pack (edict_t *ent, edict_t *other)
 	{
 		index = ITEM_INDEX(item);
 		other->client->pers.inventory[index] += item->quantity;
+
+		if(!sv_unlimited_pickup->value)
+		{
 		if (other->client->pers.inventory[index] > other->client->pers.max_rounds)
 			other->client->pers.inventory[index] = other->client->pers.max_rounds;
+		}
 	}
 #endif
 //pmm
@@ -395,11 +448,15 @@ qboolean Pickup_Nuke (edict_t *ent, edict_t *other)
 //	if (!deathmatch->value)
 //		return;
 	quantity = other->client->pers.inventory[ITEM_INDEX(ent->item)];
+
 //	if ((skill->value == 1 && quantity >= 2) || (skill->value >= 2 && quantity >= 1))
 //		return false;
 
-	if (quantity >= 1)
-		return false;
+		if(!sv_unlimited_pickup->value)
+		{
+			if (quantity >= 1)
+				return false;
+		}
 
 	if ((coop->value) && (ent->item->flags & IT_STAY_COOP) && (quantity > 0))
 		return false;
@@ -526,15 +583,21 @@ qboolean Pickup_Sphere (edict_t *ent, edict_t *other)
 {
 	int		quantity;
 
-	if(other->client && other->client->owned_sphere)
+	if(!sv_unlimited_pickup->value)
 	{
-//		gi.cprintf(other, PRINT_HIGH, "Only one sphere to a customer!\n");
-		return false;
+		if(other->client && other->client->owned_sphere)
+		{
+			gi.cprintf(other, PRINT_HIGH, "Only one sphere to a customer!\n");
+			return false;
+		}
 	}
-
 	quantity = other->client->pers.inventory[ITEM_INDEX(ent->item)];
+
+	if(!sv_unlimited_pickup->value)
+	{
 	if ((skill->value == 1 && quantity >= 2) || (skill->value >= 2 && quantity >= 1))
 		return false;
+	}
 
 	if ((coop->value) && (ent->item->flags & IT_STAY_COOP) && (quantity > 0))
 		return false;
@@ -757,14 +820,19 @@ qboolean Add_Ammo (edict_t *ent, gitem_t *item, int count)
 
 	index = ITEM_INDEX(item);
 
-	if (ent->client->pers.inventory[index] == max)
-		return false;
+	if (!sv_unlimited_pickup->value)
+	{
+		if (ent->client->pers.inventory[index] == max)
+			return false;
+	}
 
 	ent->client->pers.inventory[index] += count;
-
-	if (ent->client->pers.inventory[index] > max)
-		ent->client->pers.inventory[index] = max;
-
+	
+	if (!sv_unlimited_pickup->value)
+	{
+		if (ent->client->pers.inventory[index] > max)
+			ent->client->pers.inventory[index] = max;
+	}
 	return true;
 }
 
@@ -832,13 +900,15 @@ void Drop_Ammo (edict_t *ent, gitem_t *item)
 
 void MegaHealth_think (edict_t *self)
 {
-	if (self->owner->health > self->owner->max_health)
+	if(!sv_unlimited_pickup->value)
 	{
-		self->nextthink = level.time + 1;
-		self->owner->health -= 1;
-		return;
+		if (self->owner->health > self->owner->max_health)
+		{
+			self->nextthink = level.time + 1;			
+			self->owner->health -= 1;						
+			return;
+		}
 	}
-
 	if (!(self->spawnflags & DROPPED_ITEM) && (deathmatch->value))
 		SetRespawn (self, 20);
 	else
@@ -846,11 +916,15 @@ void MegaHealth_think (edict_t *self)
 }
 
 qboolean Pickup_Health (edict_t *ent, edict_t *other)
-{
-	if (!(ent->style & HEALTH_IGNORE_MAX))
-		if (other->health >= other->max_health)
+{	
+	if(!sv_unlimited_pickup->value)
+	{
+		if (!(ent->style & HEALTH_IGNORE_MAX))
+		{
+			if (other->health >= other->max_health)
 			return false;
-
+		}
+	}
 	other->health += ent->count;
 
 	// PMM - health sound fix
@@ -864,13 +938,14 @@ qboolean Pickup_Health (edict_t *ent, edict_t *other)
 	else // (ent->count == 100)
 		ent->item->pickup_sound = "items/m_health.wav";
 	*/
-
-	if (!(ent->style & HEALTH_IGNORE_MAX))
+	if(!sv_unlimited_pickup->value)
 	{
-		if (other->health > other->max_health)
-			other->health = other->max_health;
+		if (!(ent->style & HEALTH_IGNORE_MAX))
+		{
+			if (other->health > other->max_health)
+				other->health = other->max_health;
+		}
 	}
-
 	if (ent->style & HEALTH_TIMED)
 	{
 		ent->think = MegaHealth_think;
@@ -916,12 +991,12 @@ qboolean Pickup_Armor (edict_t *ent, edict_t *other)
 	int				newcount;
 	float			salvage;
 	int				salvagecount;
-
+	
 	// get info on new armor
 	newinfo = (gitem_armor_t *)ent->item->info;
-
+	
 	old_armor_index = ArmorIndex (other);
-
+	
 	// handle armor shards specially
 	if (ent->item->tag == ARMOR_SHARD)
 	{
@@ -930,13 +1005,13 @@ qboolean Pickup_Armor (edict_t *ent, edict_t *other)
 		else
 			other->client->pers.inventory[old_armor_index] += 2;
 	}
-
+	
 	// if player has no armor, just use it
 	else if (!old_armor_index)
 	{
 		other->client->pers.inventory[ITEM_INDEX(ent->item)] = newinfo->base_count;
 	}
-
+	
 	// use the better armor
 	else
 	{
@@ -947,40 +1022,83 @@ qboolean Pickup_Armor (edict_t *ent, edict_t *other)
 			oldinfo = &combatarmor_info;
 		else // (old_armor_index == body_armor_index)
 			oldinfo = &bodyarmor_info;
-
-		if (newinfo->normal_protection > oldinfo->normal_protection)
+		
+		if(sv_unlimited_pickup->value)
 		{
+		/*if (newinfo->normal_protection > oldinfo->normal_protection)
+		{
+		//	calc new armor values
+		//	salvage = oldinfo->normal_protection / newinfo->normal_protection;
+		salvage = newinfo->normal_protection / oldinfo->normal_protection;
+		salvagecount = salvage * other->client->pers.inventory[old_armor_index];
+		newcount = newinfo->base_count + salvagecount;
+		if (newcount > newinfo->max_count)
+		newcount = newinfo->max_count;
+		newcount = newinfo->base_count + other->client->pers.inventory[old_armor_index];
+		
+		  //zero count of old armor so it goes away
+		  other->client->pers.inventory[old_armor_index] = 0;
+		  
+			//change armor to new item with computed value
+			
+			  
+				
+				  other->client->pers.inventory[ITEM_INDEX(ent->item)] = newcount;
+				  
+					}
+					else
+			{*/
 			// calc new armor values
-			salvage = oldinfo->normal_protection / newinfo->normal_protection;
-			salvagecount = salvage * other->client->pers.inventory[old_armor_index];
-			newcount = newinfo->base_count + salvagecount;
-			if (newcount > newinfo->max_count)
-				newcount = newinfo->max_count;
-
-			// zero count of old armor so it goes away
-			other->client->pers.inventory[old_armor_index] = 0;
-
-			// change armor to new item with computed value
-			other->client->pers.inventory[ITEM_INDEX(ent->item)] = newcount;
+			//salvage = newinfo->normal_protection / oldinfo->normal_protection;
+			salvagecount = newinfo->base_count;
+			newcount = other->client->pers.inventory[old_armor_index] + salvagecount;
+			//	if (newcount > oldinfo->max_count)
+			//		newcount = oldinfo->max_count;
+			
+			// if we're already maxed out then we don't need the new armor
+			//if (other->client->pers.inventory[old_armor_index] >= newcount)
+			//	return false;
+			
+			// update current armor value
+			other->client->pers.inventory[old_armor_index] = newcount;
+			//}
 		}
 		else
 		{
-			// calc new armor values
-			salvage = newinfo->normal_protection / oldinfo->normal_protection;
-			salvagecount = salvage * newinfo->base_count;
-			newcount = other->client->pers.inventory[old_armor_index] + salvagecount;
-			if (newcount > oldinfo->max_count)
-				newcount = oldinfo->max_count;
-
-			// if we're already maxed out then we don't need the new armor
-			if (other->client->pers.inventory[old_armor_index] >= newcount)
-				return false;
-
-			// update current armor value
-			other->client->pers.inventory[old_armor_index] = newcount;
+			if (newinfo->normal_protection > oldinfo->normal_protection)
+			{
+				// calc new armor values
+				salvage = oldinfo->normal_protection / newinfo->normal_protection;
+				salvagecount = salvage * other->client->pers.inventory[old_armor_index];
+				newcount = newinfo->base_count + salvagecount;
+				if (newcount > newinfo->max_count)
+					newcount = newinfo->max_count;
+				
+				// zero count of old armor so it goes away
+				other->client->pers.inventory[old_armor_index] = 0;
+				
+				// change armor to new item with computed value
+				other->client->pers.inventory[ITEM_INDEX(ent->item)] = newcount;
+			}
+			else
+			{
+				// calc new armor values
+				salvage = newinfo->normal_protection / oldinfo->normal_protection;
+				salvagecount = salvage * newinfo->base_count;
+				newcount = other->client->pers.inventory[old_armor_index] + salvagecount;
+				if (newcount > oldinfo->max_count)
+					newcount = oldinfo->max_count;
+				
+				// if we're already maxed out then we don't need the new armor
+				if (other->client->pers.inventory[old_armor_index] >= newcount)
+					return false;
+				
+				// update current armor value
+				other->client->pers.inventory[old_armor_index] = newcount;
+			}
 		}
 	}
-
+	
 	if (!(ent->spawnflags & DROPPED_ITEM) && (deathmatch->value))
 		SetRespawn (ent, 20);
 

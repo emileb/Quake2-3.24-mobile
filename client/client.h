@@ -274,6 +274,7 @@ extern	cvar_t	*cl_yawspeed;
 extern	cvar_t	*cl_pitchspeed;
 
 extern	cvar_t	*cl_run;
+extern	cvar_t	*cl_huddigits;//alex3474247
 
 extern	cvar_t	*cl_anglespeedkey;
 
