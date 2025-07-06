@@ -1,23 +1,26 @@
-#include "game_interface.h"
 
 
 #include "SDL.h"
 #include "SDL_keycode.h"
 
 #include "../client/client.h"
-
 #include "../linux/rw_linux.h"
 
+#include "game_interface.h"
+
 #include "SmartToggle.h"
+#include "CStringFifo.h"
 
 static float look_pitch_mouse,look_pitch_abs,look_pitch_joy;
 static float look_yaw_mouse,look_yaw_joy;;
-
+static CStringFIFO m_CmdFifo;
 
 int main_android (int c, const char **v);
 void PortableInit(int argc,const char ** argv)
 {
 	LOGI("PortableInit");
+    cstr_fifo_init(&m_CmdFifo);
+
     main_android( argc, argv );
 }
 
@@ -199,15 +202,12 @@ void PortableAction(int state, int action)
 	}
 }
 
-static const char * quickCommand = 0;
 void PortableCommand(const char * cmd)
 {
-	static char cmdBuffer[256];
-	snprintf(cmdBuffer, 256, "%s\n", cmd);
-	quickCommand = cmdBuffer;
+    static char cmdBuffer[256];
+    snprintf(cmdBuffer, 256, "%s\n", cmd);
+    cstr_fifo_push(&m_CmdFifo, cmdBuffer);
 }
-
-
 
 extern client_static_t	cls;
 extern	client_state_t	cl;
@@ -290,6 +290,19 @@ void PortableLookYaw(int mode, float yaw)
 	}
 }
 
+bool PortableSetAlwaysRun(bool run)
+{
+    if(run)
+    {
+        PortableCommand("cl_run 1\n");
+    }
+    else
+    {
+        PortableCommand("cl_run 0\n");
+    }
+    return false;
+}
+
 /////////////////////
 // Movement handling
 ////
@@ -299,11 +312,12 @@ void IN_Move_Android (usercmd_t *cmd)
 {
 	in_state_t *in_state = getState();
 
-	if (quickCommand)
-	{
-		Cmd_ExecuteString((char*)quickCommand);
-		quickCommand = 0;
-	}
+    char *consoleCmd;
+    while((consoleCmd = cstr_fifo_pop(&m_CmdFifo)))
+    {
+        Cmd_ExecuteString( consoleCmd);
+        free(consoleCmd);
+    }
 
     int blockGamepad( void );
     int blockMove = blockGamepad() & ANALOGUE_AXIS_FWD;
